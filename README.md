@@ -4,7 +4,7 @@ A Machine Learning-based Web Application that detects whether an email is Phishi
 
 🚀 Live Demo
 
-🔗 https://phishing-email-detector.onrender.com
+🔗 https://phishing-email-detector-76v8.onrender.com/
 
 📌 Features
 🧠 ML-based Email Classification (Phishing / Spam / Legitimate)
@@ -103,6 +103,3 @@ Educational ML projects
 Kamisetty Satya Satvik
 B.Tech CSE (3rd Year)
 
-⭐ Show your support
-
-If you like this project, please ⭐ star the repository!
