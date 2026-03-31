@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Email Detector</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="background-glow glow-1"></div>
+    <div class="background-glow glow-2"></div>
+
+    <div class="page-wrapper">
+        <div class="left-panel">
+            <div class="brand-card">
+                <h1>🛡️ Phishing Email Detector</h1>
+                <p>
+                    Analyze suspicious emails using machine learning, risk scoring,
+                    sender analysis, URL detection, and scan history.
+                </p>
+
+                <div class="feature-list">
+                    <div class="feature-item">📧 Sender email check</div>
+                    <div class="feature-item">🔗 Suspicious URL detection</div>
+                    <div class="feature-item">📊 Probability score</div>
+                    <div class="feature-item">⚠ Risk badge</div>
+                    <div class="feature-item">🗂 SQLite scan history</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="main-card">
+                <form method="POST" id="analyzeForm">
+                    <div class="form-group">
+                        <label for="sender_email">Sender Email</label>
+                        <input
+                            type="text"
+                            id="sender_email"
+                            name="sender_email"
+                            placeholder="Enter sender email address"
+                            value="{{ sender_email }}"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Email Subject</label>
+                        <input
+                            type="text"
+                            id="subject"
+                            name="subject"
+                            placeholder="Enter email subject"
+                            value="{{ subject }}"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="body">Email Body</label>
+                        <textarea
+                            id="body"
+                            name="body"
+                            rows="10"
+                            placeholder="Paste the email content here..."
+                        >{{ body }}</textarea>
+                    </div>
+
+                    <button type="submit" class="analyze-btn" id="analyzeBtn">
+                        <span class="btn-text">🔍 Analyze Email</span>
+                        <span class="loader hidden"></span>
+                    </button>
+                </form>
+
+                {% if result %}
+                <div class="result-section">
+                    <div class="section-title">Detection Result</div>
+
+                    <div class="result-grid">
+                        <div class="result-card">
+                            <div class="card-label">🧠 Prediction</div>
+                            <div class="card-value">{{ result }}</div>
+                        </div>
+
+                        <div class="result-card">
+                            <div class="card-label">📈 Probability</div>
+                            <div class="card-value">{{ probability }}%</div>
+                        </div>
+
+                        <div class="result-card">
+                            <div class="card-label">🚨 Risk Level</div>
+                            <div class="card-value">
+                                <span class="risk-badge
+                                    {% if risk == 'High' %}risk-high
+                                    {% elif risk == 'Medium' %}risk-medium
+                                    {% else %}risk-low
+                                    {% endif %}
+                                ">
+                                    {{ risk }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="result-card">
+                            <div class="card-label">👤 Sender Check</div>
+                            <div class="card-value small-text">{{ sender_flag }}</div>
+                        </div>
+                    </div>
+
+                    <div class="alert-grid">
+                        <div class="info-box">
+                            <h3>⚠ Suspicious Keywords</h3>
+                            {% if suspicious_words %}
+                                <div class="tag-list">
+                                    {% for word in suspicious_words %}
+                                        <span class="tag danger-tag">{{ word }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="safe-msg">No suspicious keywords found.</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="info-box">
+                            <h3>🔗 URL Detection</h3>
+                            {% if url_detected %}
+                                <p class="warning-msg">Suspicious link detected in the email content.</p>
+                            {% else %}
+                                <p class="safe-msg">No URL detected.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="history-card">
+                <div class="section-title">🗂 Recent Scan History</div>
+
+                {% if history %}
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sender</th>
+                                <th>Subject</th>
+                                <th>Prediction</th>
+                                <th>Risk</th>
+                                <th>Score</th>
+                                <th>URL</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in history %}
+                            <tr>
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>
+                                    <span class="risk-badge
+                                        {% if row[3] == 'High' %}risk-high
+                                        {% elif row[3] == 'Medium' %}risk-medium
+                                        {% else %}risk-low
+                                        {% endif %}
+                                    ">
+                                        {{ row[3] }}
+                                    </span>
+                                </td>
+                                <td>{{ row[4] }}%</td>
+                                <td>{{ row[5] }}</td>
+                                <td>{{ row[7] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                    <p class="safe-msg">No scan history available yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById("analyzeForm");
+        const btn = document.getElementById("analyzeBtn");
+        const btnText = btn.querySelector(".btn-text");
+        const loader = btn.querySelector(".loader");
+
+        form.addEventListener("submit", function() {
+            btn.disabled = true;
+            btnText.textContent = "Analyzing...";
+            loader.classList.remove("hidden");
+        });
+    </script>
+</body>
+</html>
