@@ -7,25 +7,57 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="bg-particles" id="bgParticles"></div>
-    <div class="background-glow glow-1"></div>
-    <div class="background-glow glow-2"></div>
-
+    <div class="theme-toggle">
+        <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme">
+            🌙
+        </button>
+    </div>
+    
     <div class="page-wrapper">
         <div class="left-panel">
             <div class="brand-card">
-                <h1>🛡️ Phishing Email Detector</h1>
+                <div class="brand-icon">
+                    <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="45" stroke="#2563eb" stroke-width="3" opacity="0.1"/>
+                        <circle cx="50" cy="50" r="35" fill="url(#blueGrad)"/>
+                        <path d="M50 20 L75 35 L75 55 C75 70 62 80 50 85 C38 80 25 70 25 55 L25 35 L50 20 Z" fill="white" opacity="0.9"/>
+                        <path d="M50 30 L65 40 L65 52 C65 63 57 70 50 73 C43 70 35 63 35 52 L35 40 L50 30 Z" fill="#3b82f6"/>
+                        <path d="M50 40 L57 45 L57 50 C57 55 54 57 50 58 C46 57 43 55 43 50 L43 45 L50 40 Z" fill="#1d4ed8"/>
+                        <defs>
+                            <linearGradient id="blueGrad" x1="0" y1="0" x2="100" y2="100">
+                                <stop offset="0%" stop-color="#3b82f6"/>
+                                <stop offset="100%" stop-color="#2563eb"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h1><span class="emoji">🛡️</span> Phishing Email Detector</h1>
                 <p>
                     Analyze suspicious emails using machine learning, risk scoring,
                     sender analysis, URL detection, and scan history.
                 </p>
 
                 <div class="feature-list">
-                    <div class="feature-item">📧 Sender email check</div>
-                    <div class="feature-item">🔗 Suspicious URL detection</div>
-                    <div class="feature-item">📊 Probability score</div>
-                    <div class="feature-item">⚠ Risk badge</div>
-                    <div class="feature-item">🗂 SQLite scan history</div>
+                    <div class="feature-item">
+                        <span class="emoji">📧</span>
+                        Sender email check
+                    </div>
+                    <div class="feature-item">
+                        <span class="emoji">🔗</span>
+                        Suspicious URL detection
+                    </div>
+                    <div class="feature-item">
+                        <span class="emoji">📊</span>
+                        Probability score
+                    </div>
+                    <div class="feature-item">
+                        <span class="emoji">⚠️</span>
+                        Risk badge
+                    </div>
+                    <div class="feature-item">
+                        <span class="emoji">🗂️</span>
+                        SQLite scan history
+                    </div>
                 </div>
             </div>
         </div>
@@ -66,49 +98,68 @@
                     </div>
 
                     <button type="submit" class="analyze-btn" id="analyzeBtn">
-                        <span class="btn-text">🔍 Analyze Email</span>
+                        <span class="emoji">🔍</span>
+                        <span class="btn-text">Analyze Email</span>
                         <span class="loader hidden"></span>
                     </button>
                 </form>
 
                 {% if result %}
                 <div class="result-section">
-                    <div class="section-title">Detection Result</div>
+                    <div class="section-title">
+                        <span class="emoji">📋</span>
+                        Detection Result
+                    </div>
 
                     <div class="result-grid">
                         <div class="result-card">
-                            <div class="card-label">🧠 Prediction</div>
+                            <div class="card-label">
+                                <span class="emoji">🧠</span>
+                                Prediction
+                            </div>
                             <div class="card-value">{{ result }}</div>
                         </div>
 
                         <div class="result-card">
-                            <div class="card-label">📈 Probability</div>
+                            <div class="card-label">
+                                <span class="emoji">📈</span>
+                                Probability
+                            </div>
                             <div class="card-value">{{ probability }}%</div>
                         </div>
 
                         <div class="result-card">
-                            <div class="card-label">🚨 Risk Level</div>
+                            <div class="card-label">
+                                <span class="emoji">🚨</span>
+                                Risk Level
+                            </div>
                             <div class="card-value">
                                 <span class="risk-badge
                                     {% if risk == 'High' %}risk-high
                                     {% elif risk == 'Medium' %}risk-medium
                                     {% else %}risk-low
-                                    {% endif %}
-                                ">
+                                    {% endif %}"
+                                >
                                     {{ risk }}
                                 </span>
                             </div>
                         </div>
 
                         <div class="result-card">
-                            <div class="card-label">👤 Sender Check</div>
+                            <div class="card-label">
+                                <span class="emoji">👤</span>
+                                Sender Check
+                            </div>
                             <div class="card-value small-text">{{ sender_flag }}</div>
                         </div>
                     </div>
 
                     <div class="alert-grid">
                         <div class="info-box">
-                            <h3>⚠ Suspicious Keywords</h3>
+                            <h3>
+                                <span class="emoji">⚠️</span>
+                                Suspicious Keywords
+                            </h3>
                             {% if suspicious_words %}
                                 <div class="tag-list">
                                     {% for word in suspicious_words %}
@@ -121,7 +172,10 @@
                         </div>
 
                         <div class="info-box">
-                            <h3>🔗 URL Detection</h3>
+                            <h3>
+                                <span class="emoji">🔗</span>
+                                URL Detection
+                            </h3>
                             {% if url_detected %}
                                 <p class="warning-msg">Suspicious link detected in the email content.</p>
                             {% else %}
@@ -134,7 +188,10 @@
             </div>
 
             <div class="history-card">
-                <div class="section-title">🗂 Recent Scan History</div>
+                <div class="section-title">
+                    <span class="emoji">📚</span>
+                    Recent Scan History
+                </div>
 
                 {% if history %}
                 <div class="table-wrapper">
@@ -161,8 +218,8 @@
                                         {% if row[3] == 'High' %}risk-high
                                         {% elif row[3] == 'Medium' %}risk-medium
                                         {% else %}risk-low
-                                        {% endif %}
-                                    ">
+                                        {% endif %}"
+                                    >
                                         {{ row[3] }}
                                     </span>
                                 </td>
@@ -182,42 +239,46 @@
     </div>
 
     <script>
-        // Generate background particles
-        const bgParticles = document.getElementById('bgParticles');
-        const particleCount = 50;
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
         
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'bg-particle';
-            
-            // Random properties
-            const size = Math.random() * 6 + 2;
-            const left = Math.random() * 100;
-            const delay = Math.random() * 20;
-            const duration = Math.random() * 15 + 15;
-            const color = Math.random() > 0.5 ? '#00ffff' : '#ff00ff';
-            
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            particle.style.left = `${left}%`;
-            particle.style.backgroundColor = color;
-            particle.style.boxShadow = `0 0 ${size * 2}px ${color}`;
-            particle.style.animationDelay = `${delay}s`;
-            particle.style.animationDuration = `${duration}s`;
-            
-            bgParticles.appendChild(particle);
+        // Check for saved theme preference or default to light
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+        
+        // Update button emoji based on current theme
+        function updateButtonEmoji(theme) {
+            themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
         }
-
+        
+        // Apply theme
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                body.setAttribute('data-theme', 'dark');
+            } else {
+                body.removeAttribute('data-theme');
+            }
+            updateButtonEmoji(theme);
+            localStorage.setItem('theme', theme);
+        }
+        
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        });
+        
         // Form submission logic
-        const form = document.getElementById("analyzeForm");
-        const btn = document.getElementById("analyzeBtn");
-        const btnText = btn.querySelector(".btn-text");
-        const loader = btn.querySelector(".loader");
+        const form = document.getElementById('analyzeForm');
+        const btn = document.getElementById('analyzeBtn');
+        const btnText = btn.querySelector('.btn-text');
+        const loader = btn.querySelector('.loader');
 
-        form.addEventListener("submit", function() {
+        form.addEventListener('submit', () => {
             btn.disabled = true;
-            btnText.textContent = "Analyzing...";
-            loader.classList.remove("hidden");
+            btnText.textContent = 'Analyzing...';
+            loader.classList.remove('hidden');
         });
     </script>
 </body>
